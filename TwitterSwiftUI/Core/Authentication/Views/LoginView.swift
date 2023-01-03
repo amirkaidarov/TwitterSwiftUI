@@ -11,25 +11,12 @@ struct LoginView: View {
     
     @State private var email : String = ""
     @State private var password : String = ""
+    @EnvironmentObject var viewModel : AuthViewModel
     
     var body: some View {
         VStack {
             //header view
-            VStack (alignment: .leading) {
-                HStack{Spacer()}
-                
-                Text("Hello,")
-                    .font(.largeTitle)
-                    .fontWeight(.semibold)
-                Text("Welcome back")
-                    .font(.largeTitle)
-                    .fontWeight(.semibold)
-            }
-            .frame(height: 260)
-            .padding(.leading)
-            .background(Color(.systemBlue))
-            .foregroundColor(.white)
-            .clipShape(RoundedShape(corners: [.bottomRight]))
+            AuthHeaderView(header1: "Hello,", header2: "Welcome Back")
              
             VStack (spacing: 40) {
                 CustomInputField (imageName : "envelope",
@@ -57,7 +44,7 @@ struct LoginView: View {
             }
             
             Button {
-                print("Sign in here")
+                viewModel.login(withEmail: email, andPassword: password)
             } label: {
                 Text("Sign in")
                     .font(.headline)
