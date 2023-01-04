@@ -13,6 +13,9 @@ class ProfileViewModel : ObservableObject {
     let service = TweetService()
     private let userService = UserService()
     let user : User
+    var actionButtonTitle : String {
+        return self.user.isCurrentUser ? "Edit" : "Follow"
+    }
     
     init(user : User){
         self.user = user

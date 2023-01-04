@@ -82,7 +82,7 @@ extension ProfileView {
             Button {
                 //action goes here
             } label: {
-                Text("Edit Profile")
+                Text(viewModel.actionButtonTitle)
                     .font(.subheadline).bold()
                     .frame(width: 120, height: 32)
                     .foregroundColor(Color.black)
