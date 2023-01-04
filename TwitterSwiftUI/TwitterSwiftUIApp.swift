@@ -26,7 +26,7 @@ struct TwitterSwiftUIApp: App {
     
     var body: some Scene {
         WindowGroup {
-            NavigationView { 
+            NavigationStack {
                 ContentView()
             }
             .environmentObject(viewModel)

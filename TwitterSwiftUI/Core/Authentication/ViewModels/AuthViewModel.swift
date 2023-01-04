@@ -13,13 +13,21 @@ import FirebaseFirestore
 class AuthViewModel : ObservableObject {
     
     @Published var userSession : FirebaseAuth.User?
+    @Published var didAuthenticateUser = false
+    @Published var isLogin = true
+    @Published var currentUser : User?
+    
+    private var tempUserSession : FirebaseAuth.User?
+    
+    private let service = UserService()
     
     init() {
         self.userSession = Auth.auth().currentUser
+        self.fetchUser()
     }
     
-    func isAuthenticated() -> Bool {
-        return userSession != nil
+    func toggleIsLogin() {
+        isLogin.toggle()
     }
     
     func login(withEmail email : String, andPassword password : String) {
@@ -30,6 +38,7 @@ class AuthViewModel : ObservableObject {
             }
             
             self.userSession = result?.user
+            self.fetchUser()
         }
         
     }
@@ -42,7 +51,8 @@ class AuthViewModel : ObservableObject {
             }
             
             guard let user = result?.user else { return }
-            self.userSession = user
+            
+            self.tempUserSession = user
             
             let data = ["email": email,
                         "username": username.lowercased(),
@@ -51,8 +61,25 @@ class AuthViewModel : ObservableObject {
             
             Firestore.firestore().collection("users")
                 .document(user.uid)
-                .setData(data) { _ in }
+                .setData(data) { _ in
+                    self.didAuthenticateUser = true
+                }
             
+        }
+    }
+    
+    func uploadProfileImage(_ image : UIImage, completion : @escaping() -> Void) {
+        guard let uid = tempUserSession?.uid else { return }
+        
+        ImageUploader.uploadImage(image) { imageURL in
+            self.userSession = self.tempUserSession
+            self.fetchUser()
+            Firestore.firestore().collection("users")
+                .document(uid)
+                .updateData(["profileImageURL" : imageURL]) { _ in
+                    completion()
+                }
+        
         }
     }
     
@@ -61,4 +88,11 @@ class AuthViewModel : ObservableObject {
         try? Auth.auth().signOut()
     }
     
+    private func fetchUser() {
+        if let uid = userSession?.uid {
+            service.fetchUser(with: uid) { user in
+                self.currentUser = user
+            }
+        }
+    }
 }

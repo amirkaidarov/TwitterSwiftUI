@@ -24,7 +24,7 @@ struct CustomInputField: View {
                     .frame(width: 20, height: 20)
                     .foregroundColor(Color(.darkGray))
                 
-                if isSecureField ?? false {
+                if isSecureField {
                     SecureField(placeholderText, text: $text)
                 } else {
                     TextField(placeholderText, text: $text)

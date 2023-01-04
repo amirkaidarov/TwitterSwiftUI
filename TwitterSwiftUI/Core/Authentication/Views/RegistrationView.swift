@@ -15,10 +15,9 @@ struct RegistrationView: View {
     
     @EnvironmentObject var viewModel : AuthViewModel
     
-    @Environment(\.presentationMode) var presentationMode
-    
     var body: some View {
         VStack {
+            
             AuthHeaderView(header1: "Get Started", header2: "Create Your Account")
             
             VStack (spacing: 40) {
@@ -33,7 +32,7 @@ struct RegistrationView: View {
                                   text : $fullname)
                 CustomInputField (imageName : "lock",
                                   placeholderText: "Password",
-                                  isSecureField: true, 
+                                  isSecureField: true,
                                   text : $password)
             }
             .padding(32)
@@ -58,7 +57,7 @@ struct RegistrationView: View {
             Spacer()
             
             Button {
-                presentationMode.wrappedValue.dismiss()
+                viewModel.toggleIsLogin()
             } label: {
                 HStack {
                     Text("Already have an account?")
@@ -69,8 +68,12 @@ struct RegistrationView: View {
                 }
             }
             .padding(.bottom, 32)
-
-        }.ignoresSafeArea()
+            
+        }
+        .ignoresSafeArea()
+        .navigationDestination(isPresented: $viewModel.didAuthenticateUser) {
+            ProfilePhotoSelectorView()
+        }
     }
 }
 
