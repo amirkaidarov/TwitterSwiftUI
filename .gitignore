@@ -242,3 +242,6 @@ FirebaseAppCheck/Apps/AppCheckCustomProvideApp/AppCheckCustomProvideApp/GoogleSe
 /Example/FirestoreSample/FirestoreSample/GoogleService-Info.plist
 /Example/FirestoreSample/ui-debug.log
 /Example/FirestoreSample/firestore-debug.log
+
+
+/TwitterSwiftUI/GoogleService-Info.plist
